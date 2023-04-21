@@ -8,10 +8,12 @@ const context = canvas.getContext("2d");
 canvas.width = document.documentElement.clientWidth;
 canvas.height = document.documentElement.clientHeight;
 
+const wastedElement = document.querySelector('.wasted');
 let player;
 let projectiles = [];
 let enemies = [];
 let particles = [];
+let animationId;
 
 startGame();
 
@@ -47,7 +49,7 @@ function spawnEnemies() {
 }
 
 function animate() {
-  requestAnimationFrame(animate);
+  animationId =requestAnimationFrame(animate);
 
   context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -57,7 +59,15 @@ function animate() {
   
   enemies.forEach((enemy) => checkHittingEnemy(enemy));
   
-  enemies = enemies.filter((enemy) => enemy.health > 0);  
+  enemies = enemies.filter((enemy) => enemy.health > 0); 
+  
+  const isGamerOver = enemies.some(checkHittingPlayer);
+  if(isGamerOver){
+    wastedElement.style.display = 'block';
+    cancelAnimationFrame(animationId);
+  }
+
+
   particles.forEach((particle) => particle.update());
   projectiles.forEach((projectile) => projectile.update());
   
@@ -100,4 +110,8 @@ function checkHittingEnemy(enemy) {
 
 function removeProjectileByIndex(index) {
   projectiles.splice(index, 1);
+}
+function checkHittingPlayer(enemy) {
+  const distance= distanceBetweenTwoPoints(player.x, player.y, enemy. x, enemy.y);
+  return distance- enemy.radius - player.radius<0;
 }
