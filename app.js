@@ -9,10 +9,13 @@ canvas.width = document.documentElement.clientWidth;
 canvas.height = document.documentElement.clientHeight;
 
 const wastedElement = document.querySelector(".wasted");
+const scoreElement = document.querySelector("#score");
+
 let player;
 let projectiles = [];
 let enemies = [];
 let particles = [];
+let score = 0;
 let animationId;
 let spawnIntervalId;
 let countIntervalId;
@@ -115,6 +118,7 @@ function checkHittingEnemy(enemy) {
     enemy.health--;
 
     if (enemy.health < 1) {
+      increaseScore();
       enemy.createExplosion(particles);
     }
 
@@ -133,4 +137,8 @@ function checkHittingPlayer(enemy) {
     enemy.y
   );
   return distance - enemy.radius - player.radius < 0;
+}
+function increaseScore(params) {
+  score+=1;
+  scoreElement.innerHTML = ~score;
 }
