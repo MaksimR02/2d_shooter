@@ -8,12 +8,15 @@ const context = canvas.getContext("2d");
 canvas.width = document.documentElement.clientWidth;
 canvas.height = document.documentElement.clientHeight;
 
-const wastedElement = document.querySelector('.wasted');
+const wastedElement = document.querySelector(".wasted");
 let player;
 let projectiles = [];
 let enemies = [];
 let particles = [];
 let animationId;
+let spawnIntervalId;
+let countIntervalId;
+
 
 startGame();
 
@@ -45,32 +48,43 @@ function createProjectile(event) {
   );
 }
 function spawnEnemies() {
-  enemies.push(new Enemy(canvas.width, canvas.height, context, player));
+  let countOfSpawnEnemies =1;
+
+  countIntervalId = setInterval(()=>countOfSpawnEnemies++,30000);
+  spawnIntervalId =setInterval(()=> spawnCountEnemies (countOfSpawnEnemies),1000);
+  spawnCountEnemies (countOfSpawnEnemies);
+}
+
+function spawnCountEnemies(count) {
+for(let i=0;i<count;i++){
+  enemies.push(new Enemy(canvas.width,canvas.height,context,player));
+}
 }
 
 function animate() {
-  animationId =requestAnimationFrame(animate);
+  animationId = requestAnimationFrame(animate);
 
   context.clearRect(0, 0, canvas.width, canvas.height);
 
-  particles = particles.filter(particle => particle.alpha > 0);
-  
+  particles = particles.filter((particle) => particle.alpha > 0);
+
   projectiles = projectiles.filter(projectileInsideWindow);
-  
+
   enemies.forEach((enemy) => checkHittingEnemy(enemy));
-  
-  enemies = enemies.filter((enemy) => enemy.health > 0); 
-  
+
+  enemies = enemies.filter((enemy) => enemy.health > 0);
+
   const isGamerOver = enemies.some(checkHittingPlayer);
-  if(isGamerOver){
-    wastedElement.style.display = 'block';
+  if (isGamerOver) {
+    wastedElement.style.display = "block";
+    clearInterval(countIntervalId);
+    clearInterval(spawnIntervalId);
     cancelAnimationFrame(animationId);
   }
 
-
   particles.forEach((particle) => particle.update());
   projectiles.forEach((projectile) => projectile.update());
-  
+
   player.update();
   enemies.forEach((enemy) => enemy.update());
 }
@@ -112,6 +126,11 @@ function removeProjectileByIndex(index) {
   projectiles.splice(index, 1);
 }
 function checkHittingPlayer(enemy) {
-  const distance= distanceBetweenTwoPoints(player.x, player.y, enemy. x, enemy.y);
-  return distance- enemy.radius - player.radius<0;
+  const distance = distanceBetweenTwoPoints(
+    player.x,
+    player.y,
+    enemy.x,
+    enemy.y
+  );
+  return distance - enemy.radius - player.radius < 0;
 }
