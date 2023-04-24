@@ -20,7 +20,6 @@ let animationId;
 let spawnIntervalId;
 let countIntervalId;
 
-
 startGame();
 
 function startGame() {
@@ -51,17 +50,20 @@ function createProjectile(event) {
   );
 }
 function spawnEnemies() {
-  let countOfSpawnEnemies =1;
+  let countOfSpawnEnemies = 1;
 
-  countIntervalId = setInterval(()=>countOfSpawnEnemies++,30000);
-  spawnIntervalId =setInterval(()=> spawnCountEnemies (countOfSpawnEnemies),1000);
-  spawnCountEnemies (countOfSpawnEnemies);
+  countIntervalId = setInterval(() => countOfSpawnEnemies++, 30000);
+  spawnIntervalId = setInterval(
+    () => spawnCountEnemies(countOfSpawnEnemies),
+    1000
+  );
+  spawnCountEnemies(countOfSpawnEnemies);
 }
 
 function spawnCountEnemies(count) {
-for(let i=0;i<count;i++){
-  enemies.push(new Enemy(canvas.width,canvas.height,context,player));
-}
+  for (let i = 0; i < count; i++) {
+    enemies.push(new Enemy(canvas.width, canvas.height, context, player));
+  }
 }
 
 function animate() {
@@ -138,7 +140,10 @@ function checkHittingPlayer(enemy) {
   );
   return distance - enemy.radius - player.radius < 0;
 }
-function increaseScore(params) {
-  score+=1;
-  scoreElement.innerHTML = ~score;
+function increaseScore() {
+  debugger
+  score += 1;
+  debugger
+  scoreElement.innerHTML = score;
+  
 }
